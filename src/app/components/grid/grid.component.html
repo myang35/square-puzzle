@@ -1,0 +1,9 @@
+<div class="grid">
+  <ng-container *ngFor="let row of blocks">
+      <ng-container *ngFor="let block of row">
+        <div class="grid-slot">
+          <app-block *ngIf="block > 0" [value]="block">{{ block }}</app-block>
+        </div>
+      </ng-container>
+  </ng-container>
+</div>
