@@ -3,21 +3,25 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.css']
+  styleUrls: ['./grid.component.css'],
 })
 export class GridComponent implements OnInit {
+  BLANK_VALUE = 0;
 
-  blocks: number[][] = [[1,2,3],[4,-1,5],[6,7,8]];
+  grid: number[][] = [
+    [1, 2, 3],
+    [4, 0, 5],
+    [6, 7, 8],
+  ];
   blankPos = {
     x: 1,
-    y: 1
-  }
+    y: 1,
+  };
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     window.addEventListener('keydown', (e) => {
-      console.log(e.key);
       switch (e.key) {
         case 'ArrowUp':
           this.moveUp();
@@ -31,14 +35,82 @@ export class GridComponent implements OnInit {
         case 'ArrowRight':
           this.moveRight();
           break;
+        case 'Enter':
+          this.shuffle();
+          break;
         default:
           break;
       }
-    })
+    });
   }
 
+  shuffle() {
+    for (let i = 0; i < 1000; i++) {
+      const randomMove = Math.floor(Math.random() * 4);
+      switch (randomMove) {
+        case 0:
+          this.moveUp();
+          break;
+        case 1:
+          this.moveDown();
+          break;
+        case 2:
+          this.moveLeft();
+          break;
+        case 3:
+          this.moveRight();
+          break;
+        default:
+          console.log('Invalid Move');
+          break;
+      }
+    }
+  }
+
+  setBlock(x: number, y: number, value: number) {
+    this.grid[y][x] = value;
+  }
+
+  getBlock(x: number, y: number) {
+    return this.grid[y][x];
+  }
+
+  setBlank(x: number, y: number) {
+    this.setBlock(x, y, this.BLANK_VALUE);
+    this.blankPos = { x, y };
+  }
+
+  getWidth() {
+    return this.grid[0].length;
+  }
+
+  getHeight() {
+    return this.grid.length;
+  }
+
+  getNumBlocks() {
+    return this.getWidth() * this.getHeight();
+  }
+
+  isComplete(): boolean {
+    let counter = 1;
+    for (let y = 0; y < this.getHeight(); y++) {
+      for (let x = 0; x < this.getWidth(); x++) {
+        if (counter === this.getNumBlocks()) {
+          return true;
+        } else if (this.getBlock(x, y) === counter) {
+          counter++;
+        } else {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // CONTROLLER
   moveLeft() {
-    if (this.blankPos.x >= this.getWidth()-1) return;
+    if (this.blankPos.x >= this.getWidth() - 1) return;
     this.move(this.blankPos.x + 1, this.blankPos.y);
   }
 
@@ -48,7 +120,7 @@ export class GridComponent implements OnInit {
   }
 
   moveUp() {
-    if (this.blankPos.y >= this.getHeight()-1) return;
+    if (this.blankPos.y >= this.getHeight() - 1) return;
     this.move(this.blankPos.x, this.blankPos.y + 1);
   }
 
@@ -58,32 +130,9 @@ export class GridComponent implements OnInit {
   }
 
   private move(x: number, y: number) {
-    this.blocks[this.blankPos.y][this.blankPos.x] = this.blocks[y][x];
+    this.setBlock(this.blankPos.x, this.blankPos.y, this.getBlock(x, y));
     this.setBlank(x, y);
   }
 
-  private setBlank(x: number, y: number) {
-    this.blankPos.x = x;
-    this.blankPos.y = y;
-    this.blocks[this.blankPos.y][this.blankPos.x] = -1;
-  }
-
-  private getWidth() {
-    return this.blocks[0].length;
-  }
-
-  private getHeight() {
-    return this.blocks.length;
-  }
-
-  private isComplete(): boolean {
-    let counter = 1;
-    // for (let block of this.blocks) {
-    //   if (block === counter) {
-    //     block++;
-    //   }
-    // }
-    return counter === 9;
-  }
-
+  // SOLVER
 }
