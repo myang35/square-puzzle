@@ -1,4 +1,4 @@
-import { Solver } from "./solver";
+import { Solver } from './solver';
 
 export class Grid {
   BLANK_VALUE = 0;
@@ -9,13 +9,29 @@ export class Grid {
     [7, 8, 0],
   ];
 
-  constructor(grid?: number[][]) {
+  goal: number[][] = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 0],
+  ];
+
+  constructor(grid?: number[][] | Grid) {
+    if (grid instanceof Grid) {
+      this.grid = cloneGrid(grid.grid);
+      return;
+    }
+
     if (grid) {
+      this.grid = cloneGrid(grid);
+      return;
+    }
+
+    function cloneGrid(grid: number[][]) {
       const cloneGrid = [];
       for (let i = 0; i < grid.length; i++) {
         cloneGrid[i] = [...grid[i]];
       }
-      this.grid = cloneGrid;
+      return cloneGrid;
     }
   }
 
@@ -32,7 +48,7 @@ export class Grid {
       y: -1,
     };
   }
-  
+
   shuffle() {
     for (let i = 0; i < 1000; i++) {
       const randomMove = Math.floor(Math.random() * 4);
@@ -64,8 +80,34 @@ export class Grid {
     return this.grid[y][x];
   }
 
+  getGoalBlock(x: number, y: number) {
+    return this.goal[y][x];
+  }
+
   setBlank(x: number, y: number) {
     this.setBlock(x, y, this.BLANK_VALUE);
+  }
+
+  indexOfBlock(value: number) {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        if (this.getBlock(x, y) === value) {
+          return { x, y };
+        }
+      }
+    }
+    return null;
+  }
+
+  goalIndexOfBlock(value: number) {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        if (this.getGoalBlock(x, y) === value) {
+          return { x, y };
+        }
+      }
+    }
+    return null;
   }
 
   get width() {
@@ -81,16 +123,9 @@ export class Grid {
   }
 
   isComplete(): boolean {
-    let counter = 1;
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        if (counter === this.numBlocks) {
-          return true;
-        } else if (this.getBlock(x, y) === counter) {
-          counter++;
-        } else {
-          return false;
-        }
+        if (this.grid[y][x] !== this.goal[y][x]) return false;
       }
     }
     return true;
@@ -122,9 +157,20 @@ export class Grid {
     this.setBlank(x, y);
   }
 
+  equals(other: Grid) {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        if (this.getBlock(x, y) !== other.getBlock(x, y)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // SOLVER
   solve() {
     const solver = new Solver(this);
-    solver.solve();
+    return solver.solve();
   }
 }

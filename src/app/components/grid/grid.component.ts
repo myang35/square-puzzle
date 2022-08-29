@@ -32,7 +32,8 @@ export class GridComponent implements OnInit {
           this.grid.shuffle();
           break;
         case 'p':
-          this.grid.solve();
+          const solve = this.grid.solve();
+          console.log(solve);
           break;
         default:
           break;
