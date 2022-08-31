@@ -27,25 +27,25 @@ export class Solver {
 
     let counter = 0;
     // while the open list is not empty
-    while (openList.length > 0 && counter++ < 3) {
+    while (openList.length > 0) {
       // a) find the node with the least f on
       //    the open list, call it "q"
       let qIndex = 0;
       for (let i = 1; i < openList.length; i++) {
-        if (openList[i] >= openList[i-1]) continue;
+        if (openList[i].f >= openList[i-1].f) continue;
         qIndex = i;
       }
 
       // b) pop q off the open list
       const q = openList.splice(qIndex, 1)[0];
-      console.log('q:', {
-        aGrid: q.grid.grid[0],
-        bGrid: q.grid.grid[1],
-        cGrid: q.grid.grid[2],
-        f: q.f,
-        g: q.g,
-        h: q.h
-      });
+      // console.log('q:', {
+      //   aGrid: q.grid.grid[0],
+      //   bGrid: q.grid.grid[1],
+      //   cGrid: q.grid.grid[2],
+      //   f: q.f,
+      //   g: q.g,
+      //   h: q.h
+      // });
 
       // c) generate q's 4 successors and set their
       //    parents to q
@@ -59,49 +59,53 @@ export class Solver {
       successors[2].grid.moveLeft();
       successors[3].grid.moveRight();
 
-      let sucIndex = 0;
+      let sucIndex = -1;
       // d) for each successor
       for (let successor of successors) {
-        switch (sucIndex) {
-          case 0: console.log('successor-up:', {
-            aGrid: successor.grid.grid[0],
-            bGrid: successor.grid.grid[1],
-            cGrid: successor.grid.grid[2],
-            f: successor.f,
-            g: successor.g,
-            h: successor.h
-          });
-          break;
-          case 1: console.log('successor-down:', {
-            aGrid: successor.grid.grid[0],
-            bGrid: successor.grid.grid[1],
-            cGrid: successor.grid.grid[2],
-            f: successor.f,
-            g: successor.g,
-            h: successor.h
-          });
-          break;
-          case 2: console.log('successor-left:', {
-            aGrid: successor.grid.grid[0],
-            bGrid: successor.grid.grid[1],
-            cGrid: successor.grid.grid[2],
-            f: successor.f,
-            g: successor.g,
-            h: successor.h
-          });
-          break;
-          case 3: console.log('successor-right:', {
-            aGrid: successor.grid.grid[0],
-            bGrid: successor.grid.grid[1],
-            cGrid: successor.grid.grid[2],
-            f: successor.f,
-            g: successor.g,
-            h: successor.h
-          });
-          break;
-          default: console.log('INVALID SUCCESSOR');
-          break;
-        }
+        sucIndex++;
+        // skip if successor is the same as q
+        if (q.grid.equals(successor.grid)) continue;
+        
+        // switch (sucIndex) {
+        //   case 0: console.log('successor-up:', {
+        //     aGrid: successor.grid.grid[0],
+        //     bGrid: successor.grid.grid[1],
+        //     cGrid: successor.grid.grid[2],
+        //     f: successor.f,
+        //     g: successor.g,
+        //     h: successor.h
+        //   });
+        //   break;
+        //   case 1: console.log('successor-down:', {
+        //     aGrid: successor.grid.grid[0],
+        //     bGrid: successor.grid.grid[1],
+        //     cGrid: successor.grid.grid[2],
+        //     f: successor.f,
+        //     g: successor.g,
+        //     h: successor.h
+        //   });
+        //   break;
+        //   case 2: console.log('successor-left:', {
+        //     aGrid: successor.grid.grid[0],
+        //     bGrid: successor.grid.grid[1],
+        //     cGrid: successor.grid.grid[2],
+        //     f: successor.f,
+        //     g: successor.g,
+        //     h: successor.h
+        //   });
+        //   break;
+        //   case 3: console.log('successor-right:', {
+        //     aGrid: successor.grid.grid[0],
+        //     bGrid: successor.grid.grid[1],
+        //     cGrid: successor.grid.grid[2],
+        //     f: successor.f,
+        //     g: successor.g,
+        //     h: successor.h
+        //   });
+        //   break;
+        //   default: console.log('INVALID SUCCESSOR');
+        //   break;
+        // }
         // i) if successor is the goal, stop search
         if (successor.grid.isComplete()) return successor;
 
@@ -120,16 +124,15 @@ export class Solver {
             break;
           }
         }
-        if (foundFasterPath) break;
+        if (foundFasterPath) continue;
 
         // iv) if a node with the same position as successor is in the CLOSED list, which has a lower f than successor, skip this successor otherwise, add the node to the open list
         const alreadyVisitedPath = !!closedList.find(closedNode => {
           return closedNode.grid.equals(successor.grid) && closedNode.f < successor.f;
         });
-        if (alreadyVisitedPath) break;
+        if (alreadyVisitedPath) continue;
 
         openList.push(successor);
-        sucIndex++;
       }
       // end for loop
 
