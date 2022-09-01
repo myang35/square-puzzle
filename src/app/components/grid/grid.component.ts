@@ -28,12 +28,14 @@ export class GridComponent implements OnInit {
         case 'ArrowRight':
           this.grid.moveRight();
           break;
-        case 'Enter':
+        case 's':
           this.grid.shuffle();
           break;
-        case 'p':
-          const solve = this.grid.solve();
-          console.log(solve);
+        case 'r':
+          this.grid.shuffle();
+          break;
+        case 'Enter':
+          this.grid.solve();
           break;
         default:
           break;

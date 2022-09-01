@@ -3,10 +3,12 @@ import { Grid } from "./grid";
 export class GridNode {
   grid: Grid;
   parent?: GridNode;
+  move?: string;
 
-  constructor(args: {grid: Grid, parent?: GridNode}) {
+  constructor(args: {grid: Grid, parent?: GridNode, move?: string}) {
     this.grid = args.grid;
     this.parent = args.parent;
+    this.move = args.move;
   }
 
   get f(): number {

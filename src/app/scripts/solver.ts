@@ -50,9 +50,10 @@ export class Solver {
       // c) generate q's 4 successors and set their
       //    parents to q
       const successors = [];
-      for (let i = 0; i < 4; i++) {
+      const moves = ["up", "down", "left", "right"];
+      for (let i = 0; i < moves.length; i++) {
         const grid = new Grid(q.grid);
-        successors.push(new GridNode({grid, parent: q}));
+        successors.push(new GridNode({grid, parent: q, move: moves[i]}));
       }
       successors[0].grid.moveUp();
       successors[1].grid.moveDown();

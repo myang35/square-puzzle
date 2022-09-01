@@ -171,6 +171,35 @@ export class Grid {
   // SOLVER
   solve() {
     const solver = new Solver(this);
-    return solver.solve();
+    const solvedNode = solver.solve();
+    console.log('solved', solvedNode);
+    const moves: string[] = [];
+
+    let currentNode = solvedNode;
+
+    while (currentNode?.move != null) {
+      moves.push(currentNode.move);
+      currentNode = currentNode.parent!;
+    }
+    console.log('moves:', moves);
+
+    for (let i = 0; i < moves.length; i++) {
+      setTimeout(() => {
+        switch (moves[moves.length - i - 1]) {
+          case 'up':
+            this.moveUp();
+            break;
+          case 'down':
+            this.moveDown();
+            break;
+          case 'left':
+            this.moveLeft();
+            break;
+          case 'right':
+            this.moveRight();
+            break;
+        }
+      }, i * 200);
+    }
   }
 }
