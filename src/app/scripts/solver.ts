@@ -6,7 +6,7 @@ export class Solver {
   currentNode: GridNode;
 
   constructor(grid: Grid) {
-    this.grid = grid;
+    this.grid = new Grid(grid);
     const goal = [
       [1,2,3],
       [4,5,6],
@@ -16,7 +16,6 @@ export class Solver {
   }
 
   solve() {
-    console.log('solving');
     // Initialize the open list
     const openList: GridNode[] = [this.currentNode];
 

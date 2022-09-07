@@ -172,20 +172,20 @@ export class Grid {
   solve() {
     const solver = new Solver(this);
     const solvedNode = solver.solve();
-    console.log('solved', solvedNode);
     const moves: string[] = [];
 
     let currentNode = solvedNode;
 
     while (currentNode?.move != null) {
-      moves.push(currentNode.move);
+      moves.unshift(currentNode.move);
       currentNode = currentNode.parent!;
     }
+    console.log('start:', currentNode?.grid.grid);
     console.log('moves:', moves);
 
     for (let i = 0; i < moves.length; i++) {
       setTimeout(() => {
-        switch (moves[moves.length - i - 1]) {
+        switch (moves[i]) {
           case 'up':
             this.moveUp();
             break;
