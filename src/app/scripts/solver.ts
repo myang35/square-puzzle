@@ -3,21 +3,58 @@ import { GridNode } from "./grid-node";
 
 export class Solver {
   grid: Grid;
-  currentNode: GridNode;
+  startNode: GridNode;
+  moves: string[] = [];
+  
+  private currentWalkthroughTimeout?: any;
 
   constructor(grid: Grid) {
-    this.grid = new Grid(grid);
-    const goal = [
-      [1,2,3],
-      [4,5,6],
-      [7,8,0]
-    ];
-    this.currentNode = new GridNode({grid: this.grid});
+    this.grid = grid;
+    this.startNode = new GridNode({grid: this.grid});
+
+    // Find solution
+    const solvedNode = this.findSolvedNode();
+    if (solvedNode == null) {
+      console.log("No solution");
+      return;
+    }
+    this.moves = this.getMoves(solvedNode);
   }
 
-  solve() {
+  nextMove() {
+    switch (this.moves.shift()) {
+      case 'up':
+        this.grid.moveUp();
+        return 'up';
+      case 'down':
+        this.grid.moveDown();
+        return 'up';
+      case 'left':
+        this.grid.moveLeft();
+        return 'up';
+      case 'right':
+        this.grid.moveRight();
+        return 'up';
+      default:
+        console.log("No move");
+        return null;
+    }
+  }
+  
+  walkthrough() {
+    this.currentWalkthroughTimeout = setTimeout(() => {
+      if (this.nextMove() == null) return;
+      this.walkthrough();
+    }, 200);
+  }
+
+  stopWalkthrough() {
+    clearTimeout(this.currentWalkthroughTimeout);
+  }
+
+  private findSolvedNode() {
     // Initialize the open list
-    const openList: GridNode[] = [this.currentNode];
+    const openList: GridNode[] = [this.startNode];
 
     // Initialize the closed list
     // put the starting node on the open
@@ -142,5 +179,19 @@ export class Solver {
     } // end while loop
     console.log('No solution');
     return null;
+  }
+
+  private getMoves(solvedNode: GridNode) {
+    const moves: string[] = [];
+
+    let currentNode = solvedNode;
+
+    while (currentNode?.move != null) {
+      moves.unshift(currentNode.move);
+      currentNode = currentNode.parent!;
+    }
+    console.log('start:', currentNode?.grid.grid);
+    console.log('moves:', moves);
+    return moves;
   }
 }

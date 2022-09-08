@@ -34,6 +34,9 @@ export class GridComponent implements OnInit {
         case 'r':
           this.grid.shuffle();
           break;
+        case 'p':
+          this.grid.stopSolve();
+          break;
         case 'Enter':
           this.grid.solve();
           break;

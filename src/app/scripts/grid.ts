@@ -15,6 +15,8 @@ export class Grid {
     [7, 8, 0],
   ];
 
+  solver?: Solver;
+
   constructor(grid?: number[][] | Grid) {
     if (grid instanceof Grid) {
       this.grid = cloneGrid(grid.grid);
@@ -50,6 +52,7 @@ export class Grid {
   }
 
   shuffle() {
+    this.stopSolve();
     for (let i = 0; i < 1000; i++) {
       const randomMove = Math.floor(Math.random() * 4);
       switch (randomMove) {
@@ -170,36 +173,12 @@ export class Grid {
 
   // SOLVER
   solve() {
-    const solver = new Solver(this);
-    const solvedNode = solver.solve();
-    const moves: string[] = [];
+    this.solver = new Solver(this);
+    this.solver.walkthrough();
+  }
 
-    let currentNode = solvedNode;
-
-    while (currentNode?.move != null) {
-      moves.unshift(currentNode.move);
-      currentNode = currentNode.parent!;
-    }
-    console.log('start:', currentNode?.grid.grid);
-    console.log('moves:', moves);
-
-    for (let i = 0; i < moves.length; i++) {
-      setTimeout(() => {
-        switch (moves[i]) {
-          case 'up':
-            this.moveUp();
-            break;
-          case 'down':
-            this.moveDown();
-            break;
-          case 'left':
-            this.moveLeft();
-            break;
-          case 'right':
-            this.moveRight();
-            break;
-        }
-      }, i * 200);
-    }
+  stopSolve() {
+    if (!this.solver) return;
+    this.solver.stopWalkthrough();
   }
 }
