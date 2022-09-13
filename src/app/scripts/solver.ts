@@ -13,6 +13,7 @@ export class Solver {
     this.startNode = new GridNode({grid: this.grid});
 
     // Find solution
+    console.log("Finding solution");
     const solvedNode = this.findSolvedNode();
     if (solvedNode == null) {
       console.log("No solution");
@@ -63,12 +64,36 @@ export class Solver {
 
     let counter = 0;
     // while the open list is not empty
-    while (openList.length > 0) {
+    while (openList.length > 0 && counter < 10000) {
+      counter++;
+      // const openListLog = openList.map((node) => {
+      //   return {
+      //     aGrid: node.grid.grid[0],
+      //     bGrid: node.grid.grid[1],
+      //     cGrid: node.grid.grid[2],
+      //     f: node.f,
+      //     g: node.g,
+      //     h: node.h
+      //   }
+      // });
+      // console.log('openList: ', openListLog);
+      // const closedListLog = closedList.map((node) => {
+      //   return {
+      //     aGrid: node.grid.grid[0],
+      //     bGrid: node.grid.grid[1],
+      //     cGrid: node.grid.grid[2],
+      //     f: node.f,
+      //     g: node.g,
+      //     h: node.h
+      //   }
+      // });
+      // console.log('closedList: ', closedListLog);
+
       // a) find the node with the least f on
       //    the open list, call it "q"
       let qIndex = 0;
       for (let i = 1; i < openList.length; i++) {
-        if (openList[i].f >= openList[i-1].f) continue;
+        if (openList[i].f >= openList[qIndex].f) continue;
         qIndex = i;
       }
 
@@ -177,7 +202,6 @@ export class Solver {
       closedList.push(q);
 
     } // end while loop
-    console.log('No solution');
     return null;
   }
 
@@ -190,7 +214,9 @@ export class Solver {
       moves.unshift(currentNode.move);
       currentNode = currentNode.parent!;
     }
-    console.log('start:', currentNode?.grid.grid);
+    console.log('start1:', currentNode?.grid.grid[0]);
+    console.log('start2:', currentNode?.grid.grid[1]);
+    console.log('start3:', currentNode?.grid.grid[2]);
     console.log('moves:', moves);
     return moves;
   }
