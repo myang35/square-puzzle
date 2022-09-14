@@ -3,14 +3,12 @@ import { GridNode } from "./grid-node";
 
 export class Solver {
   grid: Grid;
-  startNode: GridNode;
   moves: string[] = [];
   
   private currentWalkthroughTimeout?: any;
 
   constructor(grid: Grid) {
     this.grid = grid;
-    this.startNode = new GridNode({grid: this.grid});
 
     // Find solution
     console.log("Finding solution");
@@ -55,7 +53,7 @@ export class Solver {
 
   private findSolvedNode() {
     // Initialize the open list
-    const openList: GridNode[] = [this.startNode];
+    const openList: GridNode[] = [new GridNode({grid: this.grid})];
 
     // Initialize the closed list
     // put the starting node on the open
@@ -214,9 +212,9 @@ export class Solver {
       moves.unshift(currentNode.move);
       currentNode = currentNode.parent!;
     }
-    console.log('start1:', currentNode?.grid.grid[0]);
-    console.log('start2:', currentNode?.grid.grid[1]);
-    console.log('start3:', currentNode?.grid.grid[2]);
+    console.log('start1:', JSON.parse(JSON.stringify(currentNode?.grid.grid[0])));
+    console.log('start2:', JSON.parse(JSON.stringify(currentNode?.grid.grid[1])));
+    console.log('start3:', JSON.parse(JSON.stringify(currentNode?.grid.grid[2])));
     console.log('moves:', moves);
     return moves;
   }
