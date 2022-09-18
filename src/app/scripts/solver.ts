@@ -123,6 +123,11 @@ export class Solver {
       // d) for each successor
       for (let successor of successors) {
         sucIndex++;
+
+        // dispatch nextMove event
+        const event = new CustomEvent("nextMove", { detail: successor });
+        window.dispatchEvent(event);
+
         // skip if successor is the same as q
         if (q.grid.equals(successor.grid)) continue;
         
