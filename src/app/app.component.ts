@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { GridComponent } from './components/grid/grid.component';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'square-puzzle';
+  @ViewChild("grid") gridEl!: GridComponent;
+
+  onSolveClick() {
+    this.gridEl.grid.solve();
+  }
+
+  onShuffleClick() {
+    this.gridEl.grid.shuffle();
+  }
 }

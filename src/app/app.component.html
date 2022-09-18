@@ -1,8 +1,9 @@
 <div class="app">
   <div class="grid-container">
-    <app-grid></app-grid>
+    <app-grid #grid></app-grid>
     <div class="grid-control">
-      <button class="solve-button">Solve</button>
+      <button class="grid-button" (click)="onShuffleClick()">Shuffle</button>
+      <button class="grid-button" (click)="onSolveClick()">Solve</button>
     </div>
   </div>
 </div>
