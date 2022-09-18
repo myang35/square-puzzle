@@ -5,5 +5,13 @@
       <button class="grid-button" (click)="onShuffleClick()">Shuffle</button>
       <button class="grid-button" (click)="onSolveClick()">Solve</button>
     </div>
+
+    <div>
+      <app-grid #gridSolvePlan (nextMove)="onNextMove($event)"></app-grid>
+      <p>f: {{ f }}</p>
+      <p>g: {{ g }}</p>
+      <p>h: {{ h }}</p>
+      <p>counter: {{ counter }}</p>
+    </div>
   </div>
 </div>

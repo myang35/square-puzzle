@@ -174,6 +174,10 @@ export class Grid {
   // SOLVER
   solve() {
     this.solver = new Solver(this);
+  }
+
+  startSolve() {
+    if (!this.solver) return;
     this.solver.walkthrough();
   }
 

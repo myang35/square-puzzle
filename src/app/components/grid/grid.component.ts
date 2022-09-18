@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Grid } from 'src/app/scripts/grid';
 
 @Component({
@@ -7,6 +7,8 @@ import { Grid } from 'src/app/scripts/grid';
   styleUrls: ['./grid.component.css'],
 })
 export class GridComponent implements OnInit {
+  @Output() nextMove = new EventEmitter();
+
   grid: Grid;
 
   constructor() {
@@ -31,6 +33,9 @@ export class GridComponent implements OnInit {
         default:
           break;
       }
+    });
+    window.addEventListener('nextMove', (e: any) => {
+      this.nextMove.emit(e.detail);
     });
   }
 }
