@@ -62,7 +62,7 @@ export class Solver {
 
     let counter = 0;
     // while the open list is not empty
-    while (openList.length > 0 && counter < 10000) {
+    while (openList.length > 0 && counter < 50000) {
       counter++;
       // const openListLog = openList.map((node) => {
       //   return {
